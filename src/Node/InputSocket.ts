@@ -22,6 +22,9 @@ export class InputSocket extends Socket
         this.labelElement.innerHTML = data.label;
 
         switch (data.type) {
+            case 'entry':
+                this.iconElement.style.backgroundImage = 'url(\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAH5SURBVEiJ7ZTPalNBFMa/M3fSUhvTcm+iBjc+QWoQRNBeLBq1vkFpwCewKi5cZ+tGmj5CxWxduFBx09ZY3Hi52foK+QPaIu29cz43RtKQYKBm1281zHzz/YYznCMkMU2ZqaafAaYOWHn0/G1YfXxzagBVfWBM5v2t6saNqQAAoFwuZ62X+Riub1z/7wAS4vs+ri4tnTee/bS8/uTasEcGGk3WXrwsHh/pZSAtqnOXCC0kigKcBgr6VLeoygV1LueU2Yz1ZpbDcB4A2u024jj+wSS9vdOoRyMBtca7wPtlA9rUF5hAwUDAACoBgUAEAYAAAh/8swbm+gF9iGMa7m3X4+EScSZJ6KxykC40pIAiQhEQMn625PN5lEqlnGfszsrasyvDABwn5+ip0qhHHRpSBEmCoFAIAkIAo2GEVaMZALCD+7NzKY9UaWhoHKkwBEgRkpC/1wn2w08A2u02Wq3WoUv0zl5j8/sJgNRqZrWD+VlY3zEtQvWiABcSagFEoOp8VS5SdUGdyymZtdYiDEMAQKfTQRzHh6mmdz836l8HyzyupP9UWH2aVCoV2+12EUXRQZLyXvPNq/1Bjx13eVL1ej1EUXTAxN1vNjb3h89PCaB8i6KfqsnqbmPryyjHqTrZGPvBJe7h7uut5jjPqf5gokdMNf0MMIl+Az2oCQS/ILc5AAAAAElFTkSuQmCC\')';
+                break;
             case 'string':
                 this.iconElement.style.backgroundImage = 'url(\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABmJLR0QA/wD/AP+gvaeTAAABXUlEQVRIid3WPUtcURAG4EdZxYAKLqawEAs7bS0Vq/wBq9ha5l+kCK4W/gMLwY8uooZYGMFCW2tBBJusYikhaJq1OCNer3eDC94V9oXhznDmzMt8nHMPnYheLKGOxhvLb9SCQ60EgrzUlJRJXq66Qikd3e0ggUpG7yqJo0EbM3p3oj5cYKGFWF9wJs5MER5HMIsF/MGHsIelQ32MTQzF2nf8CJ8B3GG+Wfwioh38ytgfMYGj8P2KtdCvPA3SCdZbITrHqpeYC98bfMYnjGbWN3BaRFRRjB6pDHkc4J9Upl38za3feSr3MzQjukY1Y49hMoLcSj2bxX5uXzX2FqKodMvSBJHqfx0+W/gW+k9pKAYz+y6l/hXGLyIaxz2mwt6TBqQfIziU+rge2cK0VMpRz/FfIliRRvm12JayzaOBRvb27py7rh76dAnxZ+Jbpz2/8kXSJViTHhKlPk46Cw9Uz8hd1xH5NQAAAABJRU5ErkJggg==\')';
                 this.inputElement                      = this.createElement<HTMLInputElement>('input', [],

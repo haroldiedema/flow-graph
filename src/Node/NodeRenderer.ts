@@ -11,13 +11,6 @@ import {Node}         from '@/Node/Node';
 import {NodeTemplate} from '@/Node/NodeTemplate';
 import {Viewport}     from '@/Viewport/Viewport';
 
-const NODE_TPL = `
-<div class="node">
-    <div class="header">{{ TITLE }}</div>
-    
-</div>
-`;
-
 @Service
 export class NodeRenderer
 {

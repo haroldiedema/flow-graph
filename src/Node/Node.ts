@@ -5,12 +5,12 @@
  * Licensed under MIT.                                                                                       |*/
 'use strict';
 
+import {EventEmitter}                                  from '@/Events/EventEmitter';
 import {InputSocket}                                   from '@/Node/InputSocket';
 import {NodeEdgeSocket, NodeInputSocket, NodeTemplate} from '@/Node/NodeTemplate';
 import {OutputSocket}                                  from '@/Node/OutputSocket';
-import {Socket}                                        from '@/Node/Socket';
 
-export class Node
+export class Node extends EventEmitter
 {
     public readonly element: HTMLElement;
 
@@ -28,9 +28,16 @@ export class Node
     private readonly inputs: any[]  = [];
     private readonly outputs: any[] = [];
 
-    constructor(template: NodeTemplate)
+    private dragStart: Vector2  = {x: 0, y: 0};
+    private dragState: Vector2  = {x: 0, y: 0};
+    private isDragging: boolean = false;
+
+    constructor(public readonly id: string, private readonly template: NodeTemplate)
     {
-        this.element = this.createElement('div', ['node']);
+        super();
+
+        this.element            = this.createElement('div', ['node']);
+        this.element.dataset.id = id;
 
         this.container = this.createElement('div', ['container'], this.element);
         this.header    = this.createElement('div', ['header'], this.container);
@@ -52,7 +59,7 @@ export class Node
 
         // Set element color.
         const color                          = template.color || '#B0B0B0';
-        this.container.style.backgroundImage = 'linear-gradient(' + color + ', ' + this.adjustColor(color, -20) + ')';
+        this.container.style.backgroundImage = 'linear-gradient(' + color + ', ' + this.adjustColor(color, -50) + ')';
 
         // Apply header text.
         this.headerTitle.innerHTML    = template.name;
@@ -60,8 +67,7 @@ export class Node
 
         // Input sockets.
         if (template.hasEntryFlow !== false) {
-            const socket = this.createElement('div', ['socket-flow'], this.bodyIn);
-            this.inputs.push(socket);
+            this.flowInput = new InputSocket(this.bodyIn, {type: 'entry', name: 'entry', label: ''});
         }
         (template.inputs || []).forEach((input: NodeInputSocket) => {
             this.inputs.push(new InputSocket(this.bodyIn, input));
@@ -71,16 +77,51 @@ export class Node
         (template.outputs || []).forEach((output: NodeEdgeSocket) => {
             this.outputs.push(new OutputSocket(this.bodyOut, output));
         });
+
+        this.bindDragControls();
     }
 
-    public get bodyInputElement(): HTMLElement
+    /**
+     * Returns the system name of this node.
+     *
+     * @returns {string}
+     */
+    public get systemName(): string
     {
-        return this.bodyIn;
+        return this.template.systemName;
     }
 
-    public get bodyOutputElement(): HTMLElement
+    /**
+     * Returns true if this node has an input flow socket.
+     *
+     * @returns {boolean}
+     */
+    public get hasInputSocket(): boolean
     {
-        return this.bodyOut;
+        return typeof this.flowInput !== 'undefined';
+    }
+
+    public get inputFlowSocketPosition(): Vector2
+    {
+        return this.getPositionOf(this.flowInput.element);
+    }
+
+    public get outputSockets(): OutputSocket[]
+    {
+        return this.outputs;
+    }
+
+    /**
+     * Returns the absolute position of the given element that is a child of this node.
+     *
+     * @param {HTMLElement} element
+     * @returns {Vector2}
+     */
+    public getPositionOf(element: HTMLElement): Vector2
+    {
+        let offset: Vector2 = {x: element.offsetLeft, y: element.offsetTop};
+
+        return {x: this.element.offsetLeft + offset.x, y: this.element.offsetTop + offset.y};
     }
 
     /**
@@ -167,4 +208,63 @@ export class Node
 
         return (usePound ? '#' : '') + (g | (b << 8) | (r << 16)).toString(16);
     }
+
+    private bindDragControls(): void
+    {
+        // Rebind event handlers so they can be unsubscribed.
+        this.onHeaderMouseDown = this.onHeaderMouseDown.bind(this);
+        this.onHeaderMouseUp   = this.onHeaderMouseUp.bind(this);
+        this.onHeaderMouseMove = this.onHeaderMouseMove.bind(this);
+
+        this.header.addEventListener('mousedown', this.onHeaderMouseDown);
+        this.header.addEventListener('mouseup', this.onHeaderMouseUp);
+        this.header.addEventListener('mousemove', this.onHeaderMouseMove);
+    }
+
+    private onHeaderMouseDown(e: MouseEvent): void
+    {
+        if (e.button !== 0) {
+            return;
+        }
+
+        const bbox: DOMRect = this.element.getBoundingClientRect();
+
+        this.isDragging = true;
+        this.dragState  = {
+            x: e.clientX - bbox.left,
+            y: e.clientY - bbox.top,
+        };
+        this.dragStart  = {
+            x: e.clientX - this.element.offsetLeft,
+            y: e.clientY - this.element.offsetTop,
+        };
+
+        this.emit('drag-start');
+    }
+
+    private onHeaderMouseUp(e: MouseEvent): void
+    {
+        if (!this.isDragging) {
+            return;
+        }
+
+        this.isDragging = false;
+
+        this.emit('drag-end');
+    }
+
+    private onHeaderMouseMove(e: MouseEvent): void
+    {
+        if (false === this.isDragging) {
+            return;
+        }
+
+        const x = e.clientX - this.dragStart.x,
+              y = e.clientY - this.dragStart.y;
+
+        this.element.style.top  = y + 'px';
+        this.element.style.left = x + 'px';
+    }
 }
+
+type Vector2 = { x: number, y: number };

@@ -24,6 +24,17 @@
     -webkit-user-drag: none;
   }
 
+  & > .edge-layer {
+    position: absolute;
+    top: -100000px;
+    left: -100000px;
+    width: 200000px;
+    height: 200000px;
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none;
+  }
+
   & > .workspace {
     position: relative;
 
@@ -51,6 +62,8 @@
           border-top: 1px solid rgba(255, 255, 255, 0.5);
           border-bottom: 1px solid rgba(0, 0, 0, 0.25);
           height: 48px;
+
+          * { pointer-events: none; }
 
           & > .header-icon {
             width: 32px;

@@ -21,5 +21,6 @@
     "build": "rollup -c",
     "watch": "rollup -c --watch"
   },
-  "types": "dist/FlowGraph.d.ts"
+  "types": "dist/FlowGraph.d.ts",
+  "dependencies": {}
 }

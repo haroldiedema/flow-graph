@@ -17,7 +17,7 @@ export class Transform
      *
      * @param {HTMLElement} element
      */
-    public applyTransformation(element: HTMLElement): void
+    public applyTransformation(element: HTMLElement | SVGElement): void
     {
         element.style.transformOrigin = '0 0 0 ';
         element.style.transform       = `matrix(${this.scale}, 0, 0, ${this.scale}, ${this.x}, ${this.y})`;

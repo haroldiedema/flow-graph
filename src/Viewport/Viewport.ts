@@ -14,6 +14,7 @@ export class Viewport extends EventEmitter
 {
     private _element: HTMLElement;
     private _background: HTMLElement;
+    private _edges: SVGElement;
     private _workspace: HTMLElement;
     private _size: Rect       = {width: 0, height: 0};
     private _isValid: boolean = false;
@@ -31,20 +32,22 @@ export class Viewport extends EventEmitter
     {
         this._element = element;
         this._element.classList.add('flow-graph');
-
-        const c                 = this._element.innerHTML;
         this._element.innerHTML = '';
 
         this._background = document.createElement('div');
+        this._edges      = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         this._workspace  = document.createElement('div');
+
         this._background.classList.add('background');
+        this._edges.classList.add('edge-layer');
         this._workspace.classList.add('workspace');
 
         this._element.appendChild(this._background);
+        this._element.appendChild(this._edges);
         this._element.appendChild(this._workspace);
 
-        this._workspace.innerHTML = c;
-
+        // Set-up edge layer SVG view-box.
+        this._edges.setAttribute('viewBox', '-100000 -100000 200000 200000');
 
         // Re-bind event listeners so they can be unsubscribed properly.
         this.onMouseDown = this.onMouseDown.bind(this);
@@ -62,6 +65,11 @@ export class Viewport extends EventEmitter
     public get workspace(): HTMLElement
     {
         return this._workspace;
+    }
+
+    public get edgeLayer(): SVGElement
+    {
+        return this._edges;
     }
 
     /**
@@ -135,10 +143,10 @@ export class Viewport extends EventEmitter
         this._transform.y += dy;
 
         this._transform.applyTransformation(this._background);
+        this._transform.applyTransformation(this._edges);
         this._transform.applyTransformation(this._workspace);
 
         this._dragState = point;
-
     }
 
     /**
