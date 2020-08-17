@@ -50,14 +50,16 @@ export class Viewport extends EventEmitter
         this._edges.setAttribute('viewBox', '-100000 -100000 200000 200000');
 
         // Re-bind event listeners so they can be unsubscribed properly.
-        this.onMouseDown = this.onMouseDown.bind(this);
-        this.onMouseUp   = this.onMouseUp.bind(this);
-        this.onMouseMove = this.onMouseMove.bind(this);
+        this.onMouseDown   = this.onMouseDown.bind(this);
+        this.onMouseUp     = this.onMouseUp.bind(this);
+        this.onMouseMove   = this.onMouseMove.bind(this);
+        this.onContextMenu = this.onContextMenu.bind(this);
 
         // Listen for mouse events.
         element.addEventListener('mousedown', this.onMouseDown);
         element.addEventListener('mouseup', this.onMouseUp);
         element.addEventListener('mousemove', this.onMouseMove);
+        element.addEventListener('contextmenu', this.onContextMenu);
 
         this.watchElementBoundingBox();
     }
@@ -83,6 +85,43 @@ export class Viewport extends EventEmitter
     }
 
     /**
+     * Translates the given coordinates to graph space.
+     *
+     * @param {Vector2} point
+     * @returns {Vector2}
+     */
+    public getScreenToGraphCoordinates(point: Vector2): Vector2
+    {
+        const bbox: DOMRect  = this._element.getBoundingClientRect();
+
+        return {
+            x: (point.x - bbox.left) - this._transform.x,
+            y: (point.y - bbox.top) - this._transform.y,
+        }
+    }
+
+    /**
+     * Emits the 'open-fuzzy-finder' event with 2 arguments:
+     *  - <Vector2> The mouse position on the screen, relative inside the viewport;
+     *  - <Vector2> The absolute position on the graph of where to place a node, should one be selected in the finder.
+     *
+     * @param {MouseEvent} e
+     * @returns {boolean}
+     * @private
+     */
+    private onContextMenu(e: MouseEvent): boolean
+    {
+        this.emit('open-fuzzy-finder', {
+            x: e.clientX,
+            y: e.clientY
+        }, this.getScreenToGraphCoordinates({x: e.clientX, y: e.clientY}));
+
+        e.preventDefault();
+
+        return false;
+    }
+
+    /**
      * Invoked when a mouse button is pressed down.
      *
      * @param {MouseEvent} ev
@@ -91,7 +130,7 @@ export class Viewport extends EventEmitter
     private onMouseDown(ev: MouseEvent): void
     {
         // Abort if the user holds the mouse down on anything BUT the background of the viewport element.
-        if (ev.target !== this._background) {
+        if (ev.button !== 0 || ev.target !== this._background) {
             return;
         }
 

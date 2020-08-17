@@ -172,12 +172,23 @@ export class EdgeLayer extends EventEmitter
             const node: HTMLElement = (e.target as HTMLElement).closest('.node');
             if (node) {
                 dropTarget = this.viewport.edgeLayer.getElementsByClassName(
-                    node.dataset.id + '--entry'
+                    node.dataset.id + '--entry',
                 )[0] as SVGPathElement;
             }
         }
 
         if (!dropTarget) {
+            const point = {
+                x: e.clientX,
+                y: e.clientY,
+            };
+            this.emit(
+                'connect-via-fuzzy-finder',
+                this.startingEdge.dataset.nodeId,
+                this.startingEdge.dataset.name,
+                point,
+                this.viewport.getScreenToGraphCoordinates(point),
+            );
             return this.stopDrawingEdge();
         }
 

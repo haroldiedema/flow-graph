@@ -5,20 +5,61 @@
  * Licensed under MIT.                                                                                       |*/
 'use strict';
 
+/**
+ * Represents the template of a node within the graph.
+ */
 export interface NodeTemplate
 {
+    /**
+     * The type of the node.
+     *
+     * This will determine the visual representation of the node within the graph.
+     */
     type: NodeType;
+
+    /**
+     * The system name of the node.
+     */
     systemName: string;
+
+    /**
+     * The display name of the node.
+     */
     name: string;
-    hasEntryFlow?: boolean;
-    color?: string;
+
+    /**
+     * The description of the node.
+     */
     description?: string;
-    icon?: string;
+
+    /**
+     * Whether the node accepts an input, meaning another node can be executed prior to this one.
+     */
+    hasEntryFlow?: boolean;
+
+    /**
+     * A collection of input parameters.
+     */
     inputs?: NodeInputSocket[];
+
+    /**
+     * A collection of exit states.
+     *
+     * These outputs allow connection towards other nodes.
+     */
     outputs?: NodeEdgeSocket[];
 }
 
-export type NodeType = 'CONDITION' | 'ACTION' | 'EVENT' | 'SUCCESS' | 'FAILED';
+/**
+ * Denotes the type of the node, which determines the visual representation of it.
+ */
+export enum NodeType
+{
+    'CONDITION' = 'CONDITION',
+    'ACTION' = 'ACTION',
+    'SUCCESS' = 'SUCCESS',
+    'FAILURE' = 'FAILURE'
+}
 
 export type NodeInputSocket = {
     name: string;
@@ -27,8 +68,7 @@ export type NodeInputSocket = {
     items?: {[name: string]: string|number}
 }
 
-export type NodeSocketType = string;
-
+export type NodeSocketType = 'string' | 'number' | 'boolean' | 'select' | '';
 export type NodeEdgeSocket = {
     name: string;
     label: string;

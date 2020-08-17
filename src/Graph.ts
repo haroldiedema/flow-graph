@@ -25,9 +25,7 @@ export class Graph
     constructor()
     {
         this.edgeLayer.on('new-connection', ((e: NewConnectionEvent) => {
-            console.log(`CONNECT ${e.sourceNode}.${e.sourceSocket} => ${e.targetNode}.${e.targetSocket}`);
             this.addConnection(e.sourceNode, e.sourceSocket, e.targetNode);
-            this.edgeLayer.refresh(Array.from(this.nodes.values()), this.edges);
         }));
     }
 
@@ -44,6 +42,7 @@ export class Graph
         }
 
         this.edges.get(sourceNode).set(sourceSocket, targetNode);
+        this.edgeLayer.refresh(Array.from(this.nodes.values()), this.edges);
     }
 
     /**
