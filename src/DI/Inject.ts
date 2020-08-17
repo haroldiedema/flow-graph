@@ -1,13 +1,12 @@
-/* Lux'Materia                                                .____                 /\ __  __      _           _
- *   WebGL-based Game Engine, powered by Electron             |    |    __ _____  __)/|  \/  |__ _| |_ ___ _ _(_)__ _
- *                                                            |    |   |  |  \  \/  / | |\/| / _` |  _/ -_) '_| / _` |
- * by Harold Iedema <harold@iedema.me>                        |    |___|  |  />    <  |_|  |_\__,_|\__\___|_| |_\__,_|
- * Copyright (c) 2020, all rights reserved                    |_______ \____//__/\_ \___________________________________
- * See LICENCE.txt for licencing information                          \/           */
+/* FlowGraph                                                                   ___ _             ___               _
+ *   An interactive zero-dependency flow graph editor                         | __| |_____ __ __/ __|_ _ __ _ _ __| |_
+ *                                                                            | _|| / _ \ V  V / (_ | '_/ _` | '_ \ ' \
+ * by Harold Iedema <harold@iedema.me>                                        |_| |_\___/\_/\_/ \___|_| \__,_| .__/_||_|
+ * Licensed under MIT.                                                                                       |*/
 'use strict';
 
 import 'reflect-metadata';
-import {ServiceHost} from 'Framework/DI/ServiceHost';
+import {ServiceHost} from './ServiceHost';
 
 /**
  * Injects a service instance into the decorated property based on the defined type.

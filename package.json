@@ -1,0 +1,25 @@
+{
+  "name": "flow-graph",
+  "description": "Interactive flow graph editor",
+  "author": {
+    "name": "Harold Iedema",
+    "email": "harold@iedema.me"
+  },
+  "devDependencies": {
+    "@rollup/plugin-alias": "^3.1.1",
+    "reflect-metadata": "^0.1.13",
+    "rollup": "^2.26.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-scss": "^2.6.0",
+    "rollup-plugin-serve": "^1.0.3",
+    "rollup-plugin-typescript2": "^0.27.2",
+    "tslib": "^2.0.1",
+    "typescript": "^3.9.7"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -c --watch"
+  },
+  "types": "dist/FlowGraph.d.ts"
+}
