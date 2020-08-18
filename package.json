@@ -2,10 +2,7 @@
   "name": "flow-graph",
   "version": "1.0.0",
   "description": "Interactive flow graph editor",
-  "author": {
-    "name": "Harold Iedema",
-    "email": "harold@iedema.me"
-  },
+  "author": "Harold Iedema <harold@iedema.me>",
   "devDependencies": {
     "@rollup/plugin-alias": "^3.1.1",
     "reflect-metadata": "^0.1.13",
@@ -23,5 +20,21 @@
     "watch": "rollup -c --watch"
   },
   "types": "dist/FlowGraph.d.ts",
-  "dependencies": {}
+  "dependencies": {},
+  "main": "dist/flow-graph.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/haroldiedema/flow-graph.git"
+  },
+  "keywords": [
+    "flowgraph",
+    "graph",
+    "editor",
+    "fbp"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/haroldiedema/flow-graph/issues"
+  },
+  "homepage": "https://github.com/haroldiedema/flow-graph#readme"
 }
