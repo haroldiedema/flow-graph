@@ -1,5 +1,5 @@
 {
-  "name": "flow-graph",
+  "name": "@haroldiedema/flow-graph",
   "version": "1.0.0",
   "description": "Interactive flow graph editor",
   "author": "Harold Iedema <harold@iedema.me>",
