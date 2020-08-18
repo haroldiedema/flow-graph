@@ -48,6 +48,11 @@
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
       border-radius: 6px;
       pointer-events: all;
+      min-width: 300px;
+
+      &.is-selected {
+        box-shadow: 0 0 8px rgba(75, 128, 255, 1.0), 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+      }
 
       & > .container {
         display: flex;
@@ -87,6 +92,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: flex-start;
+            width: 100%;
 
             & > .header-title {
               font-family: arial, sans-serif;
@@ -96,11 +102,17 @@
               padding: 0 10px;
             }
 
-            & > .header-sub-title {
-              font-family: arial, sans-serif;
-              font-size: 10px;
+            & > .node-id-input {
+              pointer-events: all;
+              background: transparent;
               color: #333;
-              padding: 0 10px;
+              font-family: "Droid Sans Mono", monospace;
+              font-size: 11px;
+              border: 0;
+              border-bottom: 1px solid #777;
+              margin-left: 10px;
+              padding: 2px 0;
+              width: calc(100% - 20px);
             }
           }
         }

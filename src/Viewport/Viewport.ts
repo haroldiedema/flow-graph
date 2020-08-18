@@ -64,24 +64,24 @@ export class Viewport extends EventEmitter
         this.watchElementBoundingBox();
     }
 
+    /**
+     * Returns the workspace element which contains all the nodes.
+     *
+     * @returns {HTMLElement}
+     */
     public get workspace(): HTMLElement
     {
         return this._workspace;
     }
 
+    /**
+     * Returns the edge layer element which contains all sockets & edges.
+     *
+     * @returns {SVGElement}
+     */
     public get edgeLayer(): SVGElement
     {
         return this._edges;
-    }
-
-    /**
-     * Returns the bounding box of the viewport.
-     *
-     * @returns {Rect}
-     */
-    public get size(): Rect
-    {
-        return this._size;
     }
 
     /**

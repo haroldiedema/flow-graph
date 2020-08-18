@@ -37,6 +37,7 @@ export class FuzzyFinder extends EventEmitter
         }
 
         // Clear out the search results.
+        this.searchField.value       = '';
         this.searchResults.innerHTML = '';
 
         // Populate the options with registered nodes.
@@ -115,7 +116,8 @@ export class FuzzyFinder extends EventEmitter
             }
 
             items.forEach((item: HTMLElement) => {
-                item.style.display = (item.dataset.name.indexOf(pattern) === -1 && item.dataset.systemName.indexOf(pattern) === -1)  ? 'none' : 'flex';
+                item.style.display = (item.dataset.name.indexOf(pattern) === -1 && item.dataset.systemName.indexOf(
+                    pattern) === -1) ? 'none' : 'flex';
             });
         });
     }

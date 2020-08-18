@@ -35,7 +35,7 @@ export default class FlowGraph
                 return;
             }
 
-            this.createNode('test_' + Math.floor((Math.random() * 65535)), nodeName, point);
+            this.createNode(nodeName, point);
         });
 
         this.edgeLayer.on('connect-via-fuzzy-finder', async (sourceNode: string, sourceSocket: string, mouse: Vector2, point: Vector2) => {
@@ -43,11 +43,9 @@ export default class FlowGraph
             if (!nodeName) {
                 return;
             }
-            const id = 'test_' + Math.floor((Math.random() * 65535));
-            this.createNode(id, nodeName, point);
-            setTimeout(() => this.graph.addConnection(sourceNode, sourceSocket, id), 10);
 
-            console.log('CONNECT:',sourceNode, sourceSocket, id);
+            const node = this.createNode(nodeName, point);
+            setTimeout(() => this.graph.addConnection(sourceNode, sourceSocket, node.id), 10);
         });
 
         // TEST
@@ -64,18 +62,74 @@ export default class FlowGraph
     /**
      * Creates a node on the graph at the given position vector.
      *
-     * @param {string} id
      * @param {string} systemName
      * @param {Vector2} position
+     * @param {string} id
      * @returns {Node}
      */
-    public createNode(id: string, systemName: string, position: Vector2): Node
+    public createNode(systemName: string, position: Vector2, id?: string): Node
     {
         if (!this.registry.has(systemName)) {
             console.warn(`Node template "${systemName}" does not exist.`);
         }
 
+        if (! id) {
+            id = this.generateUUID();
+        }
+
         return this.graph.addNode(id, this.registry.get(systemName), position);
+    }
+
+    /**
+     * Imports the given graph.
+     * This will erase the current graph.
+     *
+     * @param {ExportedGraph} graph
+     */
+    public import(graph: ExportedGraph): void
+    {
+        this.graph.clear();
+
+        // Add nodes.
+        Object.keys((graph.steps || {})).forEach((nodeId: string) => {
+            const data: ExportedStep = graph.steps[nodeId];
+            const node = this.createNode(data.systemName, data.position, nodeId);
+
+            // Set parameters.
+            Object.keys((data.parameters || {})).forEach((paramName: string) => {
+                node.setInputValue(paramName, data.parameters[paramName]);
+            });
+        });
+
+        // Add edges.
+        Object.keys((graph.steps || {})).forEach((nodeId: string) => {
+            const data: ExportedStep = graph.steps[nodeId];
+            Object.keys((data.exitStates || {})).forEach((exitState: string) => {
+                this.graph.addConnection(nodeId, exitState, data.exitStates[exitState]);
+            });
+        });
+    }
+
+    /**
+     * Creates an export of the current graph.
+     *
+     * @returns {ExportedGraph}
+     */
+    public export(): ExportedGraph
+    {
+        return this.graph.export();
+    }
+
+    /**
+     * Returns a randomly generated UUID v4 string.
+     *
+     * @returns {string}
+     */
+    private generateUUID(): string {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
     }
 
     //
@@ -174,3 +228,16 @@ export default class FlowGraph
 }
 
 type Vector2 = { x: number, y: number };
+
+export interface ExportedGraph
+{
+    steps: {[id: string]: ExportedStep}
+}
+
+export interface ExportedStep
+{
+    systemName: string;
+    parameters: {[name: string]: any};
+    exitStates: {[name: string]: string};
+    position: {x: number, y: number};
+}

@@ -60,12 +60,14 @@ export class EdgeLayer extends EventEmitter
         });
 
         // Draw connections.
-        edges.forEach((exitStates: Map<string, string>, sourceNode: string) => {
-            exitStates.forEach((targetNode: string, sourceSocket: string) => {
-                const source = this.viewport.edgeLayer.getElementsByClassName(`${sourceNode}--${sourceSocket}`)[0],
-                      target = this.viewport.edgeLayer.getElementsByClassName(`${targetNode}--entry`)[0];
+        requestAnimationFrame(() => {
+            edges.forEach((exitStates: Map<string, string>, sourceNode: string) => {
+                exitStates.forEach((targetNode: string, sourceSocket: string) => {
+                    const source = this.viewport.edgeLayer.getElementsByClassName(`${sourceNode}--${sourceSocket}`)[0],
+                          target = this.viewport.edgeLayer.getElementsByClassName(`${targetNode}--entry`)[0];
 
-                this.connect(source as SVGPathElement, target as SVGPathElement);
+                    this.connect(source as SVGPathElement, target as SVGPathElement);
+                });
             });
         });
     }

@@ -55,4 +55,38 @@ export class InputSocket extends Socket
                 break;
         }
     }
+
+    public get name(): string
+    {
+        return this.data.name;
+    }
+
+    public get value(): any
+    {
+        switch (this.data.type) {
+            case 'string':
+            case 'select':
+                return this.inputElement.value;
+            case 'number':
+                return parseFloat(this.inputElement.value);
+            case 'boolean':
+                return !! (this.inputElement as HTMLInputElement).checked;
+        }
+
+        return undefined;
+    }
+
+    public set value(v: any)
+    {
+        switch (this.data.type) {
+            case 'string':
+            case 'select':
+            case 'number':
+                this.inputElement.value = v;
+                break;
+            case 'boolean':
+                (this.inputElement as HTMLInputElement).checked = !!v;
+                break;
+        }
+    }
 }
