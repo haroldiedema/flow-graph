@@ -1,5 +1,6 @@
 {
   "name": "flow-graph",
+  "version": "1.0.0",
   "description": "Interactive flow graph editor",
   "author": {
     "name": "Harold Iedema",

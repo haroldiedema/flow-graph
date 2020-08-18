@@ -30,5 +30,31 @@
 
     <script>
     const fg = new FlowGraph(document.getElementById('fg'));
+
+    fg.registerNodeTemplate({
+        name: "Email the customer",
+        type: "ACTION",
+        systemName: "my.backend.logic.sendMailByTemplate",
+        description: "Send an email to the customer by the given mail template.",
+        inputs: [
+            {
+                name: "MAIL_TEMPLATE",
+                type: "string",
+                label: "Mail template"
+            }
+        ],
+        outputs: [
+            {
+                name: "success",
+                label: "Email sent successfully"
+            }, {
+                name: "tpl_not_found",
+                label: "Mail template not found"
+            }, {
+                name: "failed",
+                label: "Could not send email"
+            }
+        ]
+    });
     </script>
 </html>
