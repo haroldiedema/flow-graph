@@ -11,12 +11,12 @@ for other purposes as well.
 
 Using yarn
 ```
-$ yarn add flow-graph
+$ yarn add @haroldiedema/flow-graph
 ```
 
 Or NPM
 ```
-npm i -S flow-graph
+npm i -S @haroldiedema/flow-graph
 ```
 
 ## Getting started
@@ -28,7 +28,7 @@ to. This element will function as 'viewport' for our graph editor.
 <div id="fg"></div>
 ```
 ```typescript
-import {FlowGraph} from 'flow-graph';
+import {FlowGraph} from '@haroldiedema/flow-graph';
 
 const fg = new FlowGraph(document.getElementById('fg'));
 ```
@@ -47,7 +47,7 @@ and output sockets and so on.
 A template can be defined like this:
 ```typescript
 
-import {FlowGraph, NodeType} from 'flow-graph';
+import {FlowGraph, NodeType} from '@haroldiedema/flow-graph';
 
 const fg = new FlowGraph(document.getElementById('fg'));
 
