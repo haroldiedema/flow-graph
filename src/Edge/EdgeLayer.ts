@@ -93,8 +93,8 @@ export class EdgeLayer extends EventEmitter
 
         // Organic / curved edge
         let c1X, c1Y, c2X, c2Y;
-        if (x2 - 5 < x1) {
-            let curveFactor = (x1 - x2) * CURVE / 200;
+        if (x2 - 16 < x1) {
+            let curveFactor = (x1 - x2) * (CURVE / 360);
             if (Math.abs(y2 - y1) < 32) {
                 // Loopback
                 c1X = x1 + curveFactor;
@@ -141,8 +141,8 @@ export class EdgeLayer extends EventEmitter
         }
 
         const c = this.startingEdge.getScreenCTM(),
-              x = e.clientX - c.e,
-              y = e.clientY - c.f;
+              x = ((e.clientX * this.viewport.zoomFactor) - c.e),
+              y = ((e.clientY * this.viewport.zoomFactor) - c.f);
 
         this.currentEdge.setAttribute('d', [
             `M ${this.currentEdge.dataset.x},${this.currentEdge.dataset.y}`,
@@ -181,14 +181,14 @@ export class EdgeLayer extends EventEmitter
 
         if (!dropTarget) {
             const point = {
-                x: e.clientX,
-                y: e.clientY,
+                x: (e.clientX * this.viewport.zoomFactor),
+                y: (e.clientY * this.viewport.zoomFactor),
             };
             this.emit(
                 'connect-via-fuzzy-finder',
                 this.startingEdge.dataset.nodeId,
                 this.startingEdge.dataset.name,
-                point,
+                {x: point.x / this.viewport.zoomFactor, y: point.y / this.viewport.zoomFactor},
                 this.viewport.getScreenToGraphCoordinates(point),
             );
             return this.stopDrawingEdge();
@@ -245,8 +245,8 @@ export class EdgeLayer extends EventEmitter
     {
         const pos = node.inputFlowSocketPosition;
 
-        pos.x -= 28;
-        pos.y += 4;
+        pos.x -= 8;
+        pos.y += 8;
 
         const socket = this.drawPath([
             `M ${pos.x},${pos.y}`,

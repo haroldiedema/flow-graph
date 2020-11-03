@@ -29,18 +29,31 @@
     </div>
 
     <script>
-    const fg = new FlowGraph(document.getElementById('fg'));
+    const fg = new FlowGraph.default(document.getElementById('fg'));
 
     fg.registerNodeTemplate({
         name: "Email the customer",
         type: "ACTION",
         systemName: "my.backend.logic.sendMailByTemplate",
-        description: "Send an email to the customer by the given mail template.",
+        description: "Send an email to the customer by the given mail template. This is a pretty long description. Should we add another sentence here? Maybe we should. Lets see what happens when this is visualized in front of us.",
         inputs: [
             {
                 name: "MAIL_TEMPLATE",
                 type: "string",
                 label: "Mail template"
+            }, {
+                name: "CONTACT_NAME",
+                type: "string",
+                label: "Contact naam"
+            }, {
+                name: "CONTACT_PROVIDER",
+                type: "select",
+                label: "Contact Provider",
+                items: ["Option A", "A longer option that is B", "Another even longer option which is C!", "Some\\Long\\Text\\Without\\The\\UseOf\\Any\\SpacesForThisClass"]
+            }, {
+                name: "SHOULD_DO_STUFF",
+                type: "boolean",
+                label: "Should we do stuff?"
             }
         ],
         outputs: [
@@ -49,7 +62,7 @@
                 label: "Email sent successfully"
             }, {
                 name: "tpl_not_found",
-                label: "Mail template not found"
+                label: "Mail template not found. Are you sure you spelled it correctly? No room for mistakes here!"
             }, {
                 name: "failed",
                 label: "Could not send email"

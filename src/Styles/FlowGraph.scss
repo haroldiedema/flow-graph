@@ -1,3 +1,7 @@
+$background: #5d5d5d;
+$gridColor1: #595959;
+$gridColor2: #5a5a5a;
+
 .flow-graph {
   position: relative;
   width: 100%;
@@ -13,11 +17,21 @@
     width: 200000px;
     height: 200000px;
 
-    background-color: rgb(93, 93, 93);
-    background-image: linear-gradient(rgba(56, 56, 56, .1) 2px, transparent 1px),
-    linear-gradient(90deg, rgba(56, 56, 56, .1) 2px, transparent 1px),
-    linear-gradient(rgb(89, 89, 89) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(89, 89, 89) 1px, transparent 1px);
+    background-color: $background;
+    background-image:
+            linear-gradient($gridColor1 2px, transparent 1px),
+            linear-gradient(90deg, $gridColor1 2px, transparent 1px),
+            linear-gradient($gridColor2 1px, transparent 1px),
+            linear-gradient(90deg, $gridColor2 1px, transparent 1px);
+    //
+    //
+    //background-color: rgb(93, 93, 93);
+    //background-image:
+    //        linear-gradient(rgba(56, 56, 56, .1) 2px, transparent 1px),
+    //        linear-gradient(90deg, rgba(56, 56, 56, .1) 2px, transparent 1px),
+    //        linear-gradient(rgb(89, 89, 89) 1px, transparent 1px),
+    //        linear-gradient(90deg, rgb(89, 89, 89) 1px, transparent 1px);
+    //
     background-size: 128px 128px, 128px 128px, 16px 16px, 16px 16px;
 
     user-select: none;
@@ -55,6 +69,7 @@
       }
 
       & > .container {
+        position: relative;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
@@ -64,6 +79,7 @@
         width: 100%;
 
         & > .header {
+          position: relative;
           display: flex;
           flex-direction: row;
           justify-content: flex-start;
@@ -128,7 +144,6 @@
           color: #000;
           background: rgba(220, 220, 220, 0.85);
           padding: 5px;
-          margin-bottom: 10px;
           border-top: 1px solid rgba(255, 255, 255, 0.5);
           border-bottom: 1px solid rgba(0, 0, 0, 0.45);
 
@@ -137,15 +152,27 @@
             flex-direction: column;
             justify-content: flex-start;
             align-items: flex-start;
+            word-break: keep-all;
+            white-space: nowrap;
+
+            & .socket-text {
+              & > div.max-width {
+                width: 150px;
+                max-width: 150px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+              width: 250px !important;
+            }
 
             & input[type="text"], & input[type="number"], & select {
               background: rgba(125, 125, 125, .5);
               border: 1px solid rgba(0, 0, 0, .5);
-              padding: 2px;
+              padding: 2px !important;
               font-family: "Droid Sans Mono", Consolas, monospace;
               font-size: 10px;
-              width: 100px;
-              margin: 0 0 0 12px;
+              width: 100%;
+              margin: 0 0 0 12px !important;
             }
           }
 
@@ -154,6 +181,8 @@
             flex-direction: column;
             justify-content: flex-start;
             align-items: flex-end;
+            word-break: keep-all;
+            white-space: nowrap;
           }
 
           .socket {
@@ -208,7 +237,7 @@
   border-radius: 6px;
   border-top: 1px solid rgba(255, 255, 255, .35);
 
-  width: 250px;
+  width: 450px;
   height: 320px;
 
   & > input {

@@ -118,11 +118,6 @@ export class Graph extends EventEmitter
         this.viewport.edgeLayer.innerHTML = '';
     }
 
-    public import(graph: ExportedGraph): void
-    {
-
-    }
-
     public export(): ExportedGraph
     {
         const graph: ExportedGraph = { steps: {}};

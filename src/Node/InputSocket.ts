@@ -20,6 +20,7 @@ export class InputSocket extends Socket
 
         this.labelElement           = this.createElement('div', [], this.textElement);
         this.labelElement.innerHTML = data.label;
+        this.labelElement.title     = data.label;
 
         switch (data.type) {
             case '':
@@ -30,23 +31,27 @@ export class InputSocket extends Socket
                 this.inputElement                      = this.createElement<HTMLInputElement>('input', [],
                     this.textElement);
                 this.inputElement.setAttribute('type', 'text');
+                this.labelElement.classList.add('max-width');
                 break;
             case 'number':
                 this.iconElement.style.backgroundImage = 'url(\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAAu0lEQVRIid2VXQrCMBCEv4r0Jt5Cb2d/vKfpBfRBn+pLAmm6TZauxZ+BpYQMM8kMpPBPqIELMADjynFA77Vm6A3C6XSSgeXk6QxBtIoMRjm51agAdm8WnWG/5GzAJInNb5AzCIXFaIE70BR4asF0/QQOwCPDm+hsHlF6itINGuAGnDO8xcjUWRagjkhTqMTROaMrVOJ8T8maQiXO50oOT+zRIH7yXydtdpG7dVrJoPYmziB89eLiL/M38QJjtZXHfnE6qQAAAABJRU5ErkJggg==\')';
                 this.inputElement                      = this.createElement<HTMLInputElement>('input', [],
                     this.textElement);
                 this.inputElement.setAttribute('type', 'number');
+                this.labelElement.classList.add('max-width');
                 break;
             case 'boolean':
                 this.iconElement.style.backgroundImage = 'url(\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABmJLR0QA/wD/AP+gvaeTAAAAvklEQVRIie3W0QnCMBDG8b9SBxCnECexziKuIu5SHEBHkA7Q+igOoA/1SS2N1x70jij2g7yE434hKU1gyL9lBZyByniUwLINLh3Q5yjq0KgBV4pd6ZOXN3aGxESDE2G+eQR9ExzhT251arYK3p9+VxLgZNlXC2+UdabwFLjEgHfKOlN4Dtz4/EvMPOG9gN6BhScs1W+VdabwFZjFgNfKOlM4ByYx4NZXhSesTdBXuha9XyLB7XR0tA6OvYd8YR4/f35FQU+kTwAAAABJRU5ErkJggg==\')';
                 this.inputElement                      = this.createElement<HTMLInputElement>('input', [],
                     this.textElement);
                 this.inputElement.setAttribute('type', 'checkbox');
+                this.labelElement.addEventListener('click', () => this.inputElement.click());
                 break;
             case 'select':
                 this.iconElement.style.backgroundImage = 'url(\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAATklEQVRIiWNgGAUEACMa/z+1zWWikoE4wdC3gAWHOHrcEAsw4nD4BhEMwLzMiMZHBziDdMB9gO4ykiN/wH0wGgfDOKNRq16gvQ9GAUEAAE8SBzOvUho6AAAAAElFTkSuQmCC\')';
                 this.inputElement                      = this.createElement<HTMLSelectElement>('select', [],
                     this.textElement);
+                this.labelElement.classList.add('max-width');
                 Object.keys((data.items || {})).forEach((value: string) => {
                     const opt     = this.createElement<HTMLOptionElement>('option', [], this.inputElement);
                     opt.innerHTML = data.items[value].toString();

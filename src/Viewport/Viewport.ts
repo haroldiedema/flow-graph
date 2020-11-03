@@ -16,8 +16,9 @@ export class Viewport extends EventEmitter
     private _background: HTMLElement;
     private _edges: SVGElement;
     private _workspace: HTMLElement;
-    private _size: Rect       = {width: 0, height: 0};
-    private _isValid: boolean = false;
+    private _size: Rect         = {width: 0, height: 0};
+    private _isValid: boolean   = false;
+    private _zoomFactor: number = 1.0;
 
     private _isPanning: boolean   = false;
     private _dragState: Vector2   = {x: 0, y: 0};
@@ -54,12 +55,14 @@ export class Viewport extends EventEmitter
         this.onMouseUp     = this.onMouseUp.bind(this);
         this.onMouseMove   = this.onMouseMove.bind(this);
         this.onContextMenu = this.onContextMenu.bind(this);
+        this.onMouseWheel  = this.onMouseWheel.bind(this);
 
         // Listen for mouse events.
         element.addEventListener('mousedown', this.onMouseDown);
         element.addEventListener('mouseup', this.onMouseUp);
         element.addEventListener('mousemove', this.onMouseMove);
         element.addEventListener('contextmenu', this.onContextMenu);
+        element.addEventListener('wheel', this.onMouseWheel);
 
         this.watchElementBoundingBox();
     }
@@ -84,6 +87,11 @@ export class Viewport extends EventEmitter
         return this._edges;
     }
 
+    public get zoomFactor(): number
+    {
+        return 1 / this._zoomFactor;
+    }
+
     /**
      * Translates the given coordinates to graph space.
      *
@@ -92,12 +100,12 @@ export class Viewport extends EventEmitter
      */
     public getScreenToGraphCoordinates(point: Vector2): Vector2
     {
-        const bbox: DOMRect  = this._element.getBoundingClientRect();
+        const bbox: DOMRect = this._element.getBoundingClientRect();
 
         return {
             x: (point.x - bbox.left) - this._transform.x,
             y: (point.y - bbox.top) - this._transform.y,
-        }
+        };
     }
 
     /**
@@ -113,7 +121,7 @@ export class Viewport extends EventEmitter
     {
         this.emit('open-fuzzy-finder', {
             x: e.clientX,
-            y: e.clientY
+            y: e.clientY,
         }, this.getScreenToGraphCoordinates({x: e.clientX, y: e.clientY}));
 
         e.preventDefault();
@@ -138,8 +146,8 @@ export class Viewport extends EventEmitter
 
         this._isPanning = true;
         this._dragState = {
-            x: ev.clientX - bbox.left,
-            y: ev.clientY - bbox.top,
+            x: (ev.clientX * this.zoomFactor) - bbox.left,
+            y: (ev.clientY * this.zoomFactor) - bbox.top,
         };
     }
 
@@ -171,8 +179,8 @@ export class Viewport extends EventEmitter
 
         const bbox: DOMRect  = this._element.getBoundingClientRect();
         const point: Vector2 = {
-            x: ev.clientX - bbox.left,
-            y: ev.clientY - bbox.top,
+            x: (ev.clientX * this.zoomFactor) - bbox.left,
+            y: (ev.clientY * this.zoomFactor) - bbox.top,
         };
 
         const dx = point.x - this._dragState.x,
@@ -186,6 +194,23 @@ export class Viewport extends EventEmitter
         this._transform.applyTransformation(this._workspace);
 
         this._dragState = point;
+    }
+
+    private onMouseWheel(e: WheelEvent): void
+    {
+        if (e.deltaY < 0) {
+            this._zoomFactor += 0.25;
+            if (this._zoomFactor > 3.0) {
+                this._zoomFactor = 3.0;
+            }
+        } else {
+            this._zoomFactor -= 0.25;
+            if (this._zoomFactor < 0.25) {
+                this._zoomFactor = 0.25;
+            }
+        }
+
+        this._element.style.zoom = `${this._zoomFactor}`;
     }
 
     /**

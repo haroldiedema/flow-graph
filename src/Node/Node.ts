@@ -5,10 +5,12 @@
  * Licensed under MIT.                                                                                       |*/
 'use strict';
 
+import {Inject}                                                  from '@/DI/Inject';
 import {EventEmitter}                                            from '@/Events/EventEmitter';
 import {InputSocket}                                             from '@/Node/InputSocket';
 import {NodeEdgeSocket, NodeInputSocket, NodeTemplate, NodeType} from '@/Node/NodeTemplate';
 import {OutputSocket}                                            from '@/Node/OutputSocket';
+import {Viewport}                                                from '@/Viewport/Viewport';
 
 export const NODE_TYPE_ICONS: Map<NodeType, string>  = new Map();
 export const NODE_TYPE_COLORS: Map<NodeType, string> = new Map();
@@ -29,6 +31,8 @@ NODE_TYPE_COLORS.set(NodeType.FAILURE, '#c87');
 
 export class Node extends EventEmitter
 {
+    @Inject private readonly viewport: Viewport;
+
     public readonly element: HTMLElement;
 
     private readonly container: HTMLElement;
@@ -60,6 +64,8 @@ export class Node extends EventEmitter
         this.container = this.createElement('div', ['container'], this.element);
         this.header    = this.createElement('div', ['header'], this.container);
 
+        this.header.title = template.description;
+
         // Set icon.
         this.headerIcon                       = this.createElement('div', ['header-icon'], this.header);
         this.headerIcon.style.backgroundImage = NODE_TYPE_ICONS.get(template.type);
@@ -85,8 +91,10 @@ export class Node extends EventEmitter
 
         // Input sockets.
         if (template.hasEntryFlow !== false) {
-            this.flowInput = new InputSocket(this.bodyIn, {type: '', name: 'entry', label: ''});
+            this.flowInput = new InputSocket(this.headerIcon, {type: '', name: 'entry', label: ''});
+            this.flowInput.element.style.left = '64px';
         }
+
         (template.inputs || []).forEach((input: NodeInputSocket) => {
             this.inputs.push(new InputSocket(this.bodyIn, input));
         });
@@ -293,14 +301,17 @@ export class Node extends EventEmitter
 
         const bbox: DOMRect = this.element.getBoundingClientRect();
 
+        const x = e.clientX * this.viewport.zoomFactor,
+              y = e.clientY * this.viewport.zoomFactor;
+
         this.isDragging = true;
         this.dragState  = {
-            x: e.clientX - bbox.left,
-            y: e.clientY - bbox.top,
+            x: x - bbox.left,
+            y: y - bbox.top,
         };
         this.dragStart  = {
-            x: e.clientX - this.element.offsetLeft,
-            y: e.clientY - this.element.offsetTop,
+            x: x - this.element.offsetLeft,
+            y: y - this.element.offsetTop,
         };
 
         document.body.addEventListener('mouseup', this.onHeaderMouseUp);
@@ -329,8 +340,8 @@ export class Node extends EventEmitter
             return;
         }
 
-        const x = e.clientX - this.dragStart.x,
-              y = e.clientY - this.dragStart.y;
+        const x = (e.clientX * this.viewport.zoomFactor) - this.dragStart.x,
+              y = (e.clientY * this.viewport.zoomFactor) - this.dragStart.y;
 
         this.element.style.top  = y + 'px';
         this.element.style.left = x + 'px';

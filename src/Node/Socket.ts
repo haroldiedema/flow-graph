@@ -5,8 +5,6 @@
  * Licensed under MIT.                                                                                       |*/
 'use strict';
 
-import {Node}                       from '@/Node/Node';
-
 export class Socket
 {
     public readonly element: HTMLElement;
